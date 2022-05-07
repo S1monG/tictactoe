@@ -1,0 +1,1 @@
+// calculates the optimal place for tictactoe
