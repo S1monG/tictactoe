@@ -10,17 +10,17 @@ const WINNING_LINES: [[usize; 3]; 8] = [
 ];
 
 pub struct Board {
-    board: [Symbol; 9],
+    board: [isize; 9],
 }
 
 impl Board {
     pub fn new() -> Self {
         Board {
-            board: [Symbol::None; 9],
+            board: [0; 9],
         }
     }
 
-    pub fn is_win(&self) -> Symbol {
+    pub fn is_win(&self) -> isize {
         for line in WINNING_LINES {
             if self.board[line[0]] == self.board[line[1]]
                 && self.board[line[1]] == self.board[line[2]]
@@ -29,20 +29,24 @@ impl Board {
             }
         }
 
-        Symbol::None
+        0
     }
 
-    pub fn update(&mut self, symbol: Symbol, index: usize) {
+    pub fn update(&mut self, symbol: isize, index: usize) {
         self.board[index] = symbol;
     }
 
     pub fn print_board(&self) {
         for n in 0..3 {
             for i in (n*3)..(n*3 + 3) {
-                if self.board[i] == Symbol::None {
+                if self.board[i] == 0 {
                     print!("_ ");
                 } else {
-                    print!("{:?} ", self.board[i]);
+                    if self.board[i] == 1 {
+                        print!("X ");
+                    } else {
+                        print!("O ");
+                    }
                 }
             }
             println!("");
@@ -50,9 +54,8 @@ impl Board {
     }
 }
 
-#[derive(Copy, Clone, PartialEq, Debug)]
-pub enum Symbol {
-    X,
-    O,
-    None,
-}
+/* X is represented by 1
+   O is represented by -1
+and empty is represented by 0 
+I could use an enum to represent X O and empty but it would create slower calculations and more overhead
+considering i am going to find the optimal solution i want it to be efficient*/

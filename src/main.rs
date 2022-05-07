@@ -1,15 +1,15 @@
-use tictactoe::{Board, Symbol};
+use tictactoe::{Board};
 
 fn main() {
     println!("Hello, world!");
 
     let mut b = Board::new();
-    println!("Expect None, got {:?}", b.is_win());
-    b.update(Symbol::X, 0);
-    b.update(Symbol::X, 4);
-    b.update(Symbol::X, 8);
-    b.update(Symbol::O, 1);
-    println!("Expect X, got {:?}", b.is_win());
+    println!("Expect 0, got {}", b.is_win());
+    b.update(1, 0);
+    b.update(1, 4);
+    b.update(1, 8);
+    b.update(-1, 1);
+    println!("Expect 1, got {}", b.is_win());
 
     b.print_board();
 }
