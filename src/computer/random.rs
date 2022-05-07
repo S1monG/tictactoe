@@ -1,0 +1,1 @@
+// Picks random place for tictactoe
