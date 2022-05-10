@@ -1,5 +1,7 @@
 use tictactoe::{Board};
 
+mod window;
+
 fn main() {
     println!("Hello, world!");
 
@@ -12,4 +14,7 @@ fn main() {
     println!("Expect 1, got {}", b.is_win());
 
     b.print_board();
+
+    window::start();
+
 }
