@@ -9,6 +9,8 @@ const WINNING_LINES: [[usize; 3]; 8] = [
     [0, 4, 8],
 ];
 
+pub mod computer;
+
 pub struct Board {
     board: [isize; 9],
 }
@@ -32,8 +34,21 @@ impl Board {
         0
     }
 
+    pub fn turn(&self) -> isize {
+        let s: isize = self.board.iter().sum();
+        if s <= 0 {
+            1
+        } else {
+            -1
+        }
+    }
+
     pub fn update(&mut self, symbol: isize, index: usize) {
         self.board[index] = symbol;
+    }
+
+    pub fn clear(&mut self) {
+        self.board = [0; 9];
     }
 
     pub fn print_board(&self) {
