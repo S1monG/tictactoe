@@ -11,13 +11,21 @@ pub fn start() {
         .unwrap();
     window.set_max_fps(30);
 
+    let assets = find_folder::Search::ParentsThenKids(3, 3)
+        .for_folder("assets")
+        .unwrap();
+
+    let mut glyphs = window
+        .load_font(assets.join("FiraSans-Regular.ttf"))
+        .unwrap();
+
     let mut b = Board::new();
     let mut last_pos = [0.0, 0.0];
 
     // while loop is needed or else the window closes when the lifetime of the window ends, aka this function ends
     while let Some(event) = window.next() {
         // draw the board
-        window.draw_2d(&event, |context, graphics, _device| {
+        window.draw_2d(&event, |context, graphics, device| {
             clear([1.0; 4], graphics);
 
             let rectangle = Rectangle::new_round(color::BLACK, 5.0);
@@ -50,9 +58,24 @@ pub fn start() {
                 context.transform,
                 graphics,
             );
+
+            let t = context.transform.trans(10.0, 100.0);
+
+            text::Text::new_color([0.0; 4], 100)
+                .draw(
+                    "Hello world!",
+                    &mut glyphs,
+                    &context.draw_state,
+                    t,
+                    graphics,
+                )
+                .unwrap();
+
+            // Update glyphs before rendering.
+            glyphs.factory.encoder.flush(device);
         });
 
-        /* spara senaste positionen av mouse curse i en variable och uppdatera den när den nya inte är None */
+        // save the last variable of the mouse curser in a variable and update it when the new one isn't None
         if let Some(pos) = event.mouse_cursor_args() {
             last_pos = pos;
         }
