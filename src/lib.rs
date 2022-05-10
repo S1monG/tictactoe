@@ -17,9 +17,7 @@ pub struct Board {
 
 impl Board {
     pub fn new() -> Self {
-        Board {
-            board: [0; 9],
-        }
+        Board { board: [0; 9] }
     }
 
     pub fn is_win(&self) -> isize {
@@ -53,7 +51,7 @@ impl Board {
 
     pub fn print_board(&self) {
         for n in 0..3 {
-            for i in (n*3)..(n*3 + 3) {
+            for i in (n * 3)..(n * 3 + 3) {
                 if self.board[i] == 0 {
                     print!("_ ");
                 } else {
@@ -71,6 +69,6 @@ impl Board {
 
 /* X is represented by 1
    O is represented by -1
-and empty is represented by 0 
+and empty is represented by 0
 I could use an enum to represent X O and empty but it would create slower calculations and more overhead
 considering i am going to find the optimal solution i want it to be efficient*/
