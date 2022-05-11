@@ -1,7 +1,7 @@
 // Picks random place for tictactoe
 
-use tictactoe::{Board};
+use crate::Board;
 
-fn random_move(board: Board, turn: isize) -> usize {
+pub fn random_move(board: &Board, turn: isize) -> usize {
     todo!()
 }

@@ -1,7 +1,6 @@
 // calculates the optimal place for tictactoe using the minimax algorithm
+use crate::Board;
 
-use tictactoe::{Board};
-
-fn best_move(board: Board, turn: isize) -> usize {
+pub fn best_move(board: &Board, turn: isize) -> usize {
     todo!()
 }
