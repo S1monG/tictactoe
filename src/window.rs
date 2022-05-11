@@ -80,52 +80,62 @@ pub fn start() {
             b.update(-1, tictactoe::computer::random::random_move(&b));
         }
 
-        // draw the board
-        window.draw_2d(&event, |context, graphics, device| {
-            clear([1.0; 4], graphics);
-
-            let rectangle = Rectangle::new_round(color::BLACK, 5.0);
-
-            rectangle.draw_from_to([SIZE / 3.0 - MARGIN / 2.0, 0.0 + MARGIN], [SIZE / 3.0 + MARGIN / 2.0, SIZE - MARGIN],
-                &draw_state::DrawState::default(),
-                context.transform,
-                graphics,
-            );
-            rectangle.draw_from_to(  [2.0 * SIZE / 3.0 - MARGIN / 2.0, 0.0 + MARGIN], [2.0 * SIZE / 3.0 + MARGIN / 2.0, SIZE - MARGIN],
-                &draw_state::DrawState::default(),
-                context.transform,
-                graphics,
-            );
-            rectangle.draw_from_to([0.0 + MARGIN, SIZE / 3.0 - MARGIN / 2.0], [SIZE - MARGIN, SIZE / 3.0 + MARGIN / 2.0],
-                &draw_state::DrawState::default(),
-                context.transform,
-                graphics,
-            );
-            rectangle.draw_from_to([0.0 + MARGIN, 2.0 * SIZE / 3.0 - MARGIN / 2.0], [SIZE - MARGIN, 2.0 * SIZE / 3.0 + MARGIN / 2.0],
-                &draw_state::DrawState::default(),
-                context.transform,
-                graphics,
-            );
-
-            for (i, s) in b.board.iter().enumerate() {
-                if *s == -1 {
-                    text::Text::new_color(color::BLACK, FONT_SIZE as u32).draw(
-                        "O",
-                        &mut glyphs,
-                        &context.draw_state,
-                        context.transform.trans(BOX_PLACEMENT[i][1], BOX_PLACEMENT[i][0]), 
-                        graphics
-                    ).unwrap();
-                } else if *s == 1 {
-                    text::Text::new_color(color::BLACK, FONT_SIZE as u32).draw(
-                        "X",
-                        &mut glyphs,
-                        &context.draw_state,
-                        context.transform.trans(BOX_PLACEMENT[i][1], BOX_PLACEMENT[i][0]), 
-                        graphics
-                    ).unwrap();
-                }
-            }
-        });
+        
+        draw_board(&mut window, &event);
+        draw_symbols(&mut window, &event, &b, &mut glyphs);
+        
     }
+}
+
+fn draw_board(window: &mut PistonWindow, event: &Event) {
+    window.draw_2d(event, |context, graphics, device| {
+        clear([1.0; 4], graphics);
+        let rectangle = Rectangle::new_round(color::BLACK, 5.0);
+
+        rectangle.draw_from_to([SIZE / 3.0 - MARGIN / 2.0, 0.0 + MARGIN], [SIZE / 3.0 + MARGIN / 2.0, SIZE - MARGIN],
+            &draw_state::DrawState::default(),
+            context.transform,
+            graphics,
+        );
+        rectangle.draw_from_to(  [2.0 * SIZE / 3.0 - MARGIN / 2.0, 0.0 + MARGIN], [2.0 * SIZE / 3.0 + MARGIN / 2.0, SIZE - MARGIN],
+            &draw_state::DrawState::default(),
+            context.transform,
+            graphics,
+        );
+        rectangle.draw_from_to([0.0 + MARGIN, SIZE / 3.0 - MARGIN / 2.0], [SIZE - MARGIN, SIZE / 3.0 + MARGIN / 2.0],
+            &draw_state::DrawState::default(),
+            context.transform,
+            graphics,
+        );
+        rectangle.draw_from_to([0.0 + MARGIN, 2.0 * SIZE / 3.0 - MARGIN / 2.0], [SIZE - MARGIN, 2.0 * SIZE / 3.0 + MARGIN / 2.0],
+            &draw_state::DrawState::default(),
+            context.transform,
+            graphics,
+        );
+    });
+}
+
+fn draw_symbols(window: &mut PistonWindow, event: &Event, b: &Board, glyphs: &mut Glyphs) {
+    window.draw_2d(event, |context, graphics, device| {
+
+        for (i, s) in b.board.iter().enumerate() {
+            if *s == 1 {
+                text::Text::new_color(color::BLACK, FONT_SIZE as u32).draw(
+                    "X",
+                    glyphs,
+                    &context.draw_state,
+                    context.transform.trans(BOX_PLACEMENT[i][1], BOX_PLACEMENT[i][0]), 
+                    graphics
+                ).unwrap();
+            } else if *s == -1 {
+                text::Text::new_color(color::BLACK, FONT_SIZE as u32).draw(
+                    "O",
+                    glyphs,
+                    &context.draw_state,
+                    context.transform.trans(BOX_PLACEMENT[i][1], BOX_PLACEMENT[i][0]), 
+                    graphics
+                ).unwrap();
+            }
+        }
+    });
 }
