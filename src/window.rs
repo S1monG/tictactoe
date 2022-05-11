@@ -1,11 +1,23 @@
 use piston_window::*;
 use tictactoe::Board;
 
-const SIZE: f64 = 500.;
-const MARGIN: f64 = 10.;
+const SIZE: f64 = 500.0;
+const MARGIN: f64 = 10.0;
+const FONT_SIZE: f64 = 120.0;
+const BOX_PLACEMENT: [[f64; 2]; 9] = [
+    [SIZE/6. + FONT_SIZE/3.,    SIZE/6. - FONT_SIZE/3.],
+    [SIZE/2. + FONT_SIZE/3.,    SIZE/6. - FONT_SIZE/3.],
+    [5.*SIZE/6. + FONT_SIZE/3., SIZE/6. - FONT_SIZE/3.],
+    [SIZE/6. + FONT_SIZE/3.,    SIZE/2. - FONT_SIZE/3.],
+    [SIZE/2. + FONT_SIZE/3.,    SIZE/2. - FONT_SIZE/3.],
+    [5.*SIZE/6. + FONT_SIZE/3., SIZE/2. - FONT_SIZE/3.],
+    [SIZE/6. + FONT_SIZE/3.,    5.*SIZE/6. - FONT_SIZE/3.],
+    [SIZE/2. + FONT_SIZE/3.,    5.*SIZE/6. - FONT_SIZE/3.],
+    [5.*SIZE/6. + FONT_SIZE/3., 5.*SIZE/6. - FONT_SIZE/3.],
+];
 
 pub fn start() {
-    let mut window: PistonWindow = WindowSettings::new("Hello Piston!", [SIZE as u32, SIZE as u32])
+    let mut window: PistonWindow = WindowSettings::new("TICTACTOE", [SIZE as u32, SIZE as u32])
         .exit_on_esc(true)
         .build()
         .unwrap();
@@ -14,10 +26,9 @@ pub fn start() {
     let assets = find_folder::Search::ParentsThenKids(3, 3)
         .for_folder("assets")
         .unwrap();
+    let ref font = assets.join("FiraSans-Regular.ttf");
+    let mut glyphs = window.load_font(font).unwrap();
 
-    let mut glyphs = window
-        .load_font(assets.join("FiraSans-Regular.ttf"))
-        .unwrap();
 
     let mut b = Board::new();
     let mut last_pos = [0.0, 0.0];
@@ -59,27 +70,30 @@ pub fn start() {
                 graphics,
             );
 
-            let t = context.transform.trans(10.0, 100.0);
-
-            text::Text::new_color([0.0; 4], 100)
-                .draw(
-                    "Hello world!",
+            let mut text = "";
+            for (i, s) in b.board.iter().enumerate() {
+                if *s == -1 {
+                    text = "O";
+                } else if *s == 1 {
+                    text = "X";
+                } else {
+                    continue;
+                }
+                text::Text::new_color(color::BLACK, FONT_SIZE as u32).draw(
+                    text,
                     &mut glyphs,
                     &context.draw_state,
-                    t,
-                    graphics,
-                )
-                .unwrap();
+                    context.transform.trans(BOX_PLACEMENT[i][1], BOX_PLACEMENT[i][0]), 
+                    graphics
+                ).unwrap();
 
-            // Update glyphs before rendering.
-            glyphs.factory.encoder.flush(device);
+            }
         });
 
         // save the last variable of the mouse curser in a variable and update it when the new one isn't None
         if let Some(pos) = event.mouse_cursor_args() {
             last_pos = pos;
         }
-
         // update the board with player move
         if let Some(input) = event.press_args() {
             if input == Button::Mouse(MouseButton::Left) {

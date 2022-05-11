@@ -12,7 +12,7 @@ const WINNING_LINES: [[usize; 3]; 8] = [
 pub mod computer;
 
 pub struct Board {
-    board: [isize; 9],
+    pub board: [isize; 9],
 }
 
 impl Board {
