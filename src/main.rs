@@ -5,5 +5,5 @@ mod window;
 fn main() {
     println!("Hello, world!");
 
-    window::start();
+    window::gameloop::start();
 }

@@ -11,6 +11,7 @@ pub fn random_move(b: &Board) -> usize {
         }
     }
 
-    *empty_boxes.choose(&mut rand::thread_rng())
+    *empty_boxes
+        .choose(&mut rand::thread_rng())
         .expect("No empty places left")
 }
