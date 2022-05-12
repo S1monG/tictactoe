@@ -27,7 +27,7 @@ pub fn start() {
         // update the board with player move
         if let Some(input) = event.press_args() {
             if input == Button::Mouse(MouseButton::Left) {
-                let (x, y) = (last_pos[0], last_pos[1]);
+                let (x, y) = (last_pos[1], last_pos[0]);
                 functions::update_board_with_pos(&mut b, x, y);
             } else if input == Button::Keyboard(Key::Q) {
                 b.clear();
