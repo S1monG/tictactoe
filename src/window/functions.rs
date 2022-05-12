@@ -2,8 +2,8 @@ use crate::window::{BOX_PLACEMENT, FONT_SIZE, MARGIN, SIZE};
 use piston_window::*;
 use tictactoe::Board;
 
-pub fn draw_board(window: &mut PistonWindow, event: &Event) {
-    window.draw_2d(event, |context, graphics, _device| {
+pub fn draw_board(window: &mut PistonWindow, _event: &Event) {
+    window.draw_2d(_event, |context, graphics, _device| {
         clear([1.0; 4], graphics);
         let rectangle = Rectangle::new_round(color::BLACK, 5.0);
 
@@ -41,31 +41,24 @@ pub fn draw_board(window: &mut PistonWindow, event: &Event) {
 pub fn draw_symbols(window: &mut PistonWindow, event: &Event, b: &Board, glyphs: &mut Glyphs) {
     window.draw_2d(event, |context, graphics, _device| {
         for (i, s) in b.board.iter().enumerate() {
-            if s.clone() == 1 {
-                text::Text::new_color(color::BLACK, FONT_SIZE as u32)
-                    .draw(
-                        "X",
-                        glyphs,
-                        &context.draw_state,
-                        context
-                            .transform
-                            .trans(BOX_PLACEMENT[i][0], BOX_PLACEMENT[i][1]),
-                        graphics,
-                    )
-                    .unwrap();
-            } else if s.clone() == -1 {
-                text::Text::new_color(color::BLACK, FONT_SIZE as u32)
-                    .draw(
-                        "O",
-                        glyphs,
-                        &context.draw_state,
-                        context
-                            .transform
-                            .trans(BOX_PLACEMENT[i][0], BOX_PLACEMENT[i][1]),
-                        graphics,
-                    )
-                    .unwrap();
-            }
+            let text_symbol = match *s {
+                1 => "X",
+                -1 => "O",
+                _ => "",
+            };
+            
+            text::Text::new(FONT_SIZE as u32)
+                .draw(
+                    text_symbol,
+                    glyphs,
+                    &context.draw_state,
+                    context
+                        .transform
+                        .trans(BOX_PLACEMENT[i][0], BOX_PLACEMENT[i][1]),
+                    graphics,
+                )
+                .unwrap();
+            
         }
     });
 }

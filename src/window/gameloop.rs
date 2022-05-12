@@ -1,5 +1,6 @@
 use super::{functions, BOX_PLACEMENT, FONT_SIZE, MARGIN, SIZE};
 use piston_window::*;
+use piston_window::Loop::Idle;
 use tictactoe::Board;
 
 pub fn start() {
@@ -41,7 +42,7 @@ pub fn start() {
         }
 
         
-        functions::draw_board(&mut window, &event);
-        functions::draw_symbols(&mut window, &event, &b, &mut glyphs);
+        functions::draw_board(&mut window, &event)
+        //functions::draw_symbols(&mut window, &event, &b, &mut glyphs);
     }
 }
