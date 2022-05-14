@@ -39,28 +39,41 @@ pub fn draw_board(window: &mut PistonWindow, _event: &Event) {
 }
 
 pub fn draw_symbols(window: &mut PistonWindow, event: &Event, b: &Board, glyphs: &mut Glyphs) {
-    window.draw_2d(event, |context, graphics, _device| {
-        for (i, s) in b.board.iter().enumerate() {
-            let text_symbol = match *s {
-                1 => "X",
-                -1 => "O",
-                _ => "",
-            };
-            
-            text::Text::new(FONT_SIZE as u32)
-                .draw(
-                    text_symbol,
-                    glyphs,
-                    &context.draw_state,
-                    context
-                        .transform
-                        .trans(BOX_PLACEMENT[i][0], BOX_PLACEMENT[i][1]),
-                    graphics,
-                )
-                .unwrap();
-            
-        }
-    });
+
+    for (i, s) in b.board.iter().enumerate() {
+        match *s {
+
+            1 => window.draw_2d(event, |context, graphics, _device| {
+                text::Text::new(FONT_SIZE as u32).draw(
+                "X",
+                glyphs,
+                &context.draw_state,
+                context
+                    .transform
+                    .trans(BOX_PLACEMENT[i][0], BOX_PLACEMENT[i][1]),
+                graphics,
+            )
+            .unwrap()
+            }),
+
+            -1 => window.draw_2d(event, |context, graphics, _device| {
+                text::Text::new(FONT_SIZE as u32).draw(
+                "O",
+                glyphs,
+                &context.draw_state,
+                context
+                    .transform
+                    .trans(BOX_PLACEMENT[i][0], BOX_PLACEMENT[i][1]),
+                graphics,
+            )
+            .unwrap()
+            }),
+
+            _ => Some(()),
+
+        };
+
+    };
 }
 
 pub fn update_board_with_pos(b: &mut Board, x: f64, y: f64) {
