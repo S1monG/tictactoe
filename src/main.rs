@@ -29,6 +29,10 @@ async fn main() {
             std::process::exit(0);
         }
 
+        if is_key_pressed(KeyCode::C) {
+            b.clear();
+        }
+
         if is_mouse_button_pressed(MouseButton::Left) {
             let (x, y) = mouse_position();
             let index = get_box(x, y);
@@ -37,8 +41,8 @@ async fn main() {
             }
         }
 
-        if b.turn() == -1 {
-            b.update(-1, random_move(&b));
+        if b.turn() == -1 && !b.is_full() {
+            b.update(-1, optimal_move(&b, -1));
         }
 
 
@@ -74,9 +78,14 @@ async fn main() {
 
         //check win
         match b.is_win() {
-            1 => draw_text("You Win!", WIDTH/2., HEIGHT/2., FONT_SIZE*3., BLACK),
-            -1 => draw_text("Computer Win!", WIDTH/2., HEIGHT/2., FONT_SIZE*3., BLACK),
+            1 => {clear_background(WHITE); draw_text("You Win!", 20., HEIGHT/2., FONT_SIZE, BLACK)},
+            -1 => {clear_background(WHITE); draw_text("Computer Win!", 20., HEIGHT/2., FONT_SIZE, BLACK)},
             _ => (),
+        }
+
+        if b.is_full() {
+            clear_background(WHITE); 
+            draw_text("draw!", 20., HEIGHT/2., FONT_SIZE, BLACK)
         }
 
         next_frame().await;

@@ -11,6 +11,7 @@ const WINNING_LINES: [[usize; 3]; 8] = [
 
 pub mod computer;
 
+#[derive(Debug, Clone, Copy)]
 pub struct Board {
     pub board: [isize; 9],
 }
@@ -49,21 +50,29 @@ impl Board {
         self.board = [0; 9];
     }
 
+    pub fn is_full(&self) -> bool {
+        !self.board.contains(&0)
+    }
+
     pub fn print_board(&self) {
         for n in 0..3 {
             for i in (n * 3)..(n * 3 + 3) {
                 if self.board[i] == 0 {
                     print!("_ ");
-                } else {
-                    if self.board[i] == 1 {
+                } else if self.board[i] == 1 {
                         print!("X ");
-                    } else {
+                } else {
                         print!("O ");
-                    }
                 }
             }
-            println!("");
+            println!();
         }
+    }
+}
+
+impl Default for Board {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
