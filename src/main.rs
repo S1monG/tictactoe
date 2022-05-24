@@ -41,8 +41,21 @@ async fn main() {
             }
         }
 
+        match b.is_win() {
+            1 => {clear_background(WHITE); draw_text("You Win!", 20., HEIGHT/2., FONT_SIZE, BLACK)},
+            -1 => {clear_background(WHITE); draw_text("Computer Win!", 20., HEIGHT/2., FONT_SIZE, BLACK)},
+            _ => (),
+        }
+
         if b.turn() == -1 && !b.is_full() {
-            b.update(-1, optimal_move(&b, -1));
+            //b.update(-1, optimal_move(&b, -1));
+            b.update(-1, random_move(&b));
+        }
+
+        match b.is_win() {
+            1 => {clear_background(WHITE); draw_text("You Win!", 20., HEIGHT/2., FONT_SIZE, BLACK)},
+            -1 => {clear_background(WHITE); draw_text("Computer Win!", 20., HEIGHT/2., FONT_SIZE, BLACK)},
+            _ => (),
         }
 
 
@@ -74,13 +87,6 @@ async fn main() {
                     );
                 }
             }
-        }
-
-        //check win
-        match b.is_win() {
-            1 => {clear_background(WHITE); draw_text("You Win!", 20., HEIGHT/2., FONT_SIZE, BLACK)},
-            -1 => {clear_background(WHITE); draw_text("Computer Win!", 20., HEIGHT/2., FONT_SIZE, BLACK)},
-            _ => (),
         }
 
         if b.is_full() {
