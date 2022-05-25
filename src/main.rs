@@ -22,6 +22,16 @@ async fn main() {
 
     let mut b: Board = Board::new();
 
+    /* let font_style = load_ttf_font("assets/FiraSans-Regular.ttf")  
+
+    let font_style = TextParams {
+        font: font_style,
+        font_size: FONT_SIZE,
+        font_scale: 1.0,
+        font_scale_aspect: 1.0,
+        color: BLACK,
+    }; */
+
     loop {
 
         if b.is_full() {
@@ -48,7 +58,6 @@ async fn main() {
                 b.update(1, index);
             }
         }
-
         // check if player X won
         if b.is_win() == 1 {
             clear_background(WHITE); 
@@ -61,10 +70,11 @@ async fn main() {
 
         // player O move
         if b.turn() == -1 && !b.is_full() {
-            //b.update(-1, optimal_move(&b, -1));
+            let index = optimal_move(&b, -1);
             b.update(-1, random_move(&b));
+            //b.update(-1, index);
+            //println!("{}", index);
         }
-
         // check if player O won
         if b.is_win() == -1 {
             clear_background(WHITE); 
@@ -74,7 +84,6 @@ async fn main() {
             b.clear();
             continue;
         }
-
 
         //draw state
         clear_background(WHITE);
