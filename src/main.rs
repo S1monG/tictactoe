@@ -1,4 +1,5 @@
 use macroquad::prelude::*;
+use std::time::Duration;
 use tictactoe::Board;
 use tictactoe::computer::{random::random_move, optimal::optimal_move};
 
@@ -23,16 +24,23 @@ async fn main() {
 
     loop {
 
-        // update state ...
-        if is_key_pressed(KeyCode::Q) || is_key_pressed(KeyCode::Escape) {
-            println!("Bye for know!");
-            std::process::exit(0);
+        if b.is_full() {
+            clear_background(WHITE); 
+            draw_text("draw!", 20., HEIGHT/2., FONT_SIZE, BLACK);
+            next_frame().await;
+            std::thread::sleep(Duration::new(2, 0));
+            b.clear();
+            continue;
         }
 
+        // player X move
+        if is_key_pressed(KeyCode::Q) || is_key_pressed(KeyCode::Escape) {
+            println!("Bye for now!");
+            std::process::exit(0);
+        }
         if is_key_pressed(KeyCode::C) {
             b.clear();
         }
-
         if is_mouse_button_pressed(MouseButton::Left) {
             let (x, y) = mouse_position();
             let index = get_box(x, y);
@@ -41,21 +49,30 @@ async fn main() {
             }
         }
 
-        match b.is_win() {
-            1 => {clear_background(WHITE); draw_text("You Win!", 20., HEIGHT/2., FONT_SIZE, BLACK)},
-            -1 => {clear_background(WHITE); draw_text("Computer Win!", 20., HEIGHT/2., FONT_SIZE, BLACK)},
-            _ => (),
+        // check if player X won
+        if b.is_win() == 1 {
+            clear_background(WHITE); 
+            draw_text("You Win!", 20., HEIGHT/2., FONT_SIZE, BLACK);
+            next_frame().await;
+            std::thread::sleep(Duration::new(2, 0));
+            b.clear();
+            continue;
         }
 
+        // player O move
         if b.turn() == -1 && !b.is_full() {
             //b.update(-1, optimal_move(&b, -1));
             b.update(-1, random_move(&b));
         }
 
-        match b.is_win() {
-            1 => {clear_background(WHITE); draw_text("You Win!", 20., HEIGHT/2., FONT_SIZE, BLACK)},
-            -1 => {clear_background(WHITE); draw_text("Computer Win!", 20., HEIGHT/2., FONT_SIZE, BLACK)},
-            _ => (),
+        // check if player O won
+        if b.is_win() == -1 {
+            clear_background(WHITE); 
+            draw_text("Computer Win!", 20., HEIGHT/2., FONT_SIZE, BLACK);
+            next_frame().await;
+            std::thread::sleep(Duration::new(2, 0));
+            b.clear();
+            continue;
         }
 
 
@@ -88,12 +105,7 @@ async fn main() {
                 }
             }
         }
-
-        if b.is_full() {
-            clear_background(WHITE); 
-            draw_text("draw!", 20., HEIGHT/2., FONT_SIZE, BLACK)
-        }
-
+        
         next_frame().await;
     }
 }
