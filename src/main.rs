@@ -71,9 +71,9 @@ async fn main() {
         // player O move
         if b.turn() == -1 && !b.is_full() {
             let index = optimal_move(&b, -1);
-            b.update(-1, random_move(&b));
-            //b.update(-1, index);
-            //println!("{}", index);
+            //b.update(-1, random_move(&b));
+            b.update(-1, index);
+            println!("{}", index);
         }
         // check if player O won
         if b.is_win() == -1 {

@@ -1,5 +1,6 @@
 // calculates the optimal place for tictactoe using the minimax algorithm
 use crate::Board;
+use super::random::random_move;
 use std::{cmp::{min, max}, os::windows::process};
 
 // symbol is who the algorithm will calculate the optimal solution for.
@@ -9,52 +10,45 @@ pub fn optimal_move(b: &Board, symbol: isize) -> usize {
         std::process::exit(1)
     }
 
-    match symbol {
-        1 => optimal_move_x(b),
-        -1 => optimal_move_o(b),
-        _ => {eprintln!("symbol other than 1 or -1 given to the optimal_move function"); 
-                std::process::exit(1)},
-    }
-}
+    let mut best_move: Option<usize> = None;
 
-fn optimal_move_x(b: &Board) -> usize {
-    let mut best_move = 0;
-    let mut best_score = -1;
-    for i in 0..9 {
-        // check if the spot is empty
-        if b.board[i] == 0 {
-            let mut board_clone = b.clone();
-            board_clone.update(1, i);
-            let new_score = minimax(board_clone, true, 1);
-            // update score if it is better
-            if new_score > best_score {
-                best_score = new_score;
-                best_move = i;
+    if symbol == 1 {
+        let mut highest_score = -1;
+        for i in 0..9 {
+            if b.board[i] == 0 {
+                let mut board_clone = b.clone();
+                board_clone.update(1, i);
+                let score = minimax(board_clone, true);
+                if score > highest_score {
+                    highest_score = score;
+                    best_move = Some(i);
+                }
             }
-        }
+        }  
+    } else if symbol == -1 {
+        let mut lowest_score = 1;
+        for i in 0..9 {
+            if b.board[i] == 0 {
+                let mut board_clone = b.clone();
+                board_clone.update(-1, i);
+                let score = minimax(board_clone, false);
+                if score < lowest_score {
+                    lowest_score = score;
+                    best_move = Some(i);
+                }
+            }
+        }  
+    } else {
+        eprintln!("symbol other than 1 or -1 given to the optimal_move() function"); 
+        std::process::exit(1);
     }
 
-    best_move
-}
-
-fn optimal_move_o(b: &Board) -> usize {
-    let mut best_move = 0;
-    let mut best_score = 1;
-    for i in 0..9 {
-        let mut board_clone = b.clone();
-        board_clone.update(-1, i);
-        let new_score = minimax(board_clone, false, -1);
-        if new_score < best_score {
-            best_score = new_score;
-            best_move = i;
-        }
-    }
-
-    best_move
+    best_move.unwrap_or_else(|| random_move(b))
 }
 
 // helper function used by optimal_move
-fn minimax(mut b: Board, is_mini: bool, symbol: isize) -> isize {
+// whos turn it is can be derived from is_mini
+fn minimax(mut b: Board, is_mini: bool) -> isize {
     if b.is_win() != 0 {
         b.is_win()
     } else if is_mini {
@@ -62,8 +56,8 @@ fn minimax(mut b: Board, is_mini: bool, symbol: isize) -> isize {
         for i in 0..9 {
             if b.board[i] == 0 { 
                 let mut board_clone = b.clone();
-                board_clone.update(symbol, i);
-                let new_score = minimax(board_clone, false, symbol);
+                board_clone.update(-1, i);
+                let new_score = minimax(board_clone, false);
                 if new_score < lowest_score {
                     lowest_score = new_score;
                 }
@@ -75,8 +69,8 @@ fn minimax(mut b: Board, is_mini: bool, symbol: isize) -> isize {
         for i in 0..9 {
             if b.board[i] == 0 { 
                 let mut board_clone = b.clone();
-                board_clone.update(-1, i);
-                let new_score = minimax(board_clone, true, symbol);
+                board_clone.update(1, i);
+                let new_score = minimax(board_clone, true);
                 if new_score > highest_score {
                     highest_score = new_score;
                 }
@@ -85,6 +79,7 @@ fn minimax(mut b: Board, is_mini: bool, symbol: isize) -> isize {
         highest_score
     }
 }
+
 
 
 
