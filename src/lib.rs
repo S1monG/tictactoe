@@ -21,6 +21,7 @@ impl Board {
         Board { board: [0; 9] }
     }
 
+    // returns 1 if x won, -1 if o won and 0 if noone won (so far)
     pub fn is_win(&self) -> isize {
         for line in WINNING_LINES {
             if self.board[line[0]] == self.board[line[1]]

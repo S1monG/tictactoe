@@ -49,7 +49,7 @@ pub fn optimal_move(b: &Board, symbol: isize) -> usize {
 // helper function used by optimal_move
 // whos turn it is can be derived from is_mini
 fn minimax(mut b: Board, is_mini: bool) -> isize {
-    if b.is_win() != 0 {
+    if b.is_win() != 0 || b.is_full() {
         b.is_win()
     } else if is_mini {
         let mut lowest_score = 1;

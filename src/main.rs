@@ -42,6 +42,22 @@ async fn main() {
             b.clear();
             continue;
         }
+        if b.is_win() == 1 {
+            clear_background(WHITE); 
+            draw_text("You Win!", 20., HEIGHT/2., FONT_SIZE, BLACK);
+            next_frame().await;
+            std::thread::sleep(Duration::new(2, 0));
+            b.clear();
+            continue;
+        }
+        if b.is_win() == -1 {
+            clear_background(WHITE); 
+            draw_text("Computer Win!", 20., HEIGHT/2., FONT_SIZE, BLACK);
+            next_frame().await;
+            std::thread::sleep(Duration::new(2, 0));
+            b.clear();
+            continue;
+        }
 
         // player X move
         if is_key_pressed(KeyCode::Q) || is_key_pressed(KeyCode::Escape) {
@@ -56,34 +72,19 @@ async fn main() {
             let index = get_box(x, y);
             if b.board[index] == 0 {
                 b.update(1, index);
+                continue;
             }
         }
-        // check if player X won
-        if b.is_win() == 1 {
-            clear_background(WHITE); 
-            draw_text("You Win!", 20., HEIGHT/2., FONT_SIZE, BLACK);
-            next_frame().await;
-            std::thread::sleep(Duration::new(2, 0));
-            b.clear();
-            continue;
-        }
+
 
         // player O move
         if b.turn() == -1 && !b.is_full() {
             let index = optimal_move(&b, -1);
             //b.update(-1, random_move(&b));
             b.update(-1, index);
-            println!("{}", index);
+            println!("{:?} \n", b.print_board());
         }
-        // check if player O won
-        if b.is_win() == -1 {
-            clear_background(WHITE); 
-            draw_text("Computer Win!", 20., HEIGHT/2., FONT_SIZE, BLACK);
-            next_frame().await;
-            std::thread::sleep(Duration::new(2, 0));
-            b.clear();
-            continue;
-        }
+
 
         //draw state
         clear_background(WHITE);
