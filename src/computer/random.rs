@@ -1,5 +1,3 @@
-// Picks random place for tictactoe
-
 use crate::Board;
 use rand::seq::SliceRandom;
 

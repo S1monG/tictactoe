@@ -1,10 +1,7 @@
 use macroquad::prelude::*;
-use std::time::Duration;
-use tictactoe::Board;
+use tictactoe::computer::{optimal::optimal_move, random::random_move};
 use tictactoe::functions::*;
-use tictactoe::computer::{random::random_move, optimal::optimal_move};
-
-
+use tictactoe::Board;
 
 fn window_conf() -> Conf {
     Conf {
@@ -17,23 +14,16 @@ fn window_conf() -> Conf {
 
 #[macroquad::main(window_conf)]
 async fn main() {
-
     let mut b: Board = Board::new();
 
     loop {
-
         if b.is_full() {
-            clear_background(WHITE); 
-            draw_text("draw!", 20., HEIGHT/2., FONT_SIZE, BLACK);
-            next_frame().await;
-            std::thread::sleep(Duration::new(2, 0));
+            clear_background(WHITE);
+            draw_text("draw!", 20., HEIGHT / 2., FONT_SIZE, BLACK);
             b.clear();
             continue;
         }
-        
-        
 
-        // player X move
         if is_key_pressed(KeyCode::Q) || is_key_pressed(KeyCode::Escape) {
             println!("Bye for now!");
             std::process::exit(0);
@@ -41,33 +31,48 @@ async fn main() {
         if is_key_pressed(KeyCode::C) {
             b.clear();
         }
+        //player X move
         if is_mouse_button_pressed(MouseButton::Left) {
             let (x, y) = mouse_position();
             let index = get_box(x, y);
             if b.board[index] == 0 {
                 b.update(1, index);
-                continue;
+
+                //check for win
+                check_win(&mut b).await;
             }
         }
-
-        check_win(&mut b);
 
         // player O move
         if b.turn() == -1 && !b.is_full() {
             let index = optimal_move(&b, -1);
             //b.update(-1, random_move(&b));
             b.update(-1, index);
-            println!("{:?} \n", b.print_board());
-        }
 
-        check_win(&mut b);
+            // check for win
+            check_win(&mut b).await;
+        }
 
         //draw state
         clear_background(WHITE);
         draw_line(WIDTH / 3., 0., WIDTH / 3., HEIGHT, THICKNESS, BLACK);
-        draw_line(2. * WIDTH / 3., 0., 2. * WIDTH / 3., HEIGHT, THICKNESS, BLACK);
+        draw_line(
+            2. * WIDTH / 3.,
+            0.,
+            2. * WIDTH / 3.,
+            HEIGHT,
+            THICKNESS,
+            BLACK,
+        );
         draw_line(0., HEIGHT / 3., WIDTH, HEIGHT / 3., THICKNESS, BLACK);
-        draw_line(0., 2. * HEIGHT / 3., WIDTH, 2. * HEIGHT / 3., THICKNESS, BLACK);
+        draw_line(
+            0.,
+            2. * HEIGHT / 3.,
+            WIDTH,
+            2. * HEIGHT / 3.,
+            THICKNESS,
+            BLACK,
+        );
 
         for i in 0..3 {
             for j in 0..3 {
@@ -91,8 +96,7 @@ async fn main() {
                 }
             }
         }
-        
+
         next_frame().await;
     }
 }
-

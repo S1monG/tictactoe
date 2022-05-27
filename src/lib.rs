@@ -12,7 +12,7 @@ const WINNING_LINES: [[usize; 3]; 8] = [
 pub mod computer;
 pub mod functions;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub struct Board {
     pub board: [isize; 9],
 }
@@ -62,9 +62,9 @@ impl Board {
                 if self.board[i] == 0 {
                     print!("_ ");
                 } else if self.board[i] == 1 {
-                        print!("X ");
+                    print!("X ");
                 } else {
-                        print!("O ");
+                    print!("O ");
                 }
             }
             println!();
