@@ -1,12 +1,10 @@
 use macroquad::prelude::*;
 use std::time::Duration;
 use tictactoe::Board;
+use tictactoe::functions::*;
 use tictactoe::computer::{random::random_move, optimal::optimal_move};
 
-const WIDTH: f32 = 500.;
-const HEIGHT: f32 = 500.;
-const THICKNESS: f32 = 10.;
-const FONT_SIZE: f32 = 100.;
+
 
 fn window_conf() -> Conf {
     Conf {
@@ -22,16 +20,6 @@ async fn main() {
 
     let mut b: Board = Board::new();
 
-    /* let font_style = load_ttf_font("assets/FiraSans-Regular.ttf")  
-
-    let font_style = TextParams {
-        font: font_style,
-        font_size: FONT_SIZE,
-        font_scale: 1.0,
-        font_scale_aspect: 1.0,
-        color: BLACK,
-    }; */
-
     loop {
 
         if b.is_full() {
@@ -42,22 +30,8 @@ async fn main() {
             b.clear();
             continue;
         }
-        if b.is_win() == 1 {
-            clear_background(WHITE); 
-            draw_text("You Win!", 20., HEIGHT/2., FONT_SIZE, BLACK);
-            next_frame().await;
-            std::thread::sleep(Duration::new(2, 0));
-            b.clear();
-            continue;
-        }
-        if b.is_win() == -1 {
-            clear_background(WHITE); 
-            draw_text("Computer Win!", 20., HEIGHT/2., FONT_SIZE, BLACK);
-            next_frame().await;
-            std::thread::sleep(Duration::new(2, 0));
-            b.clear();
-            continue;
-        }
+        
+        
 
         // player X move
         if is_key_pressed(KeyCode::Q) || is_key_pressed(KeyCode::Escape) {
@@ -76,6 +50,7 @@ async fn main() {
             }
         }
 
+        check_win(&mut b);
 
         // player O move
         if b.turn() == -1 && !b.is_full() {
@@ -85,6 +60,7 @@ async fn main() {
             println!("{:?} \n", b.print_board());
         }
 
+        check_win(&mut b);
 
         //draw state
         clear_background(WHITE);
@@ -120,30 +96,3 @@ async fn main() {
     }
 }
 
-fn get_box(x: f32, y: f32) -> usize {
-    if y < HEIGHT/3. {
-        if x < WIDTH/3. {
-            0
-        } else if x < 2.*WIDTH/3. {
-            1
-        } else {
-            2
-        }
-    } else if y < 2.*HEIGHT/3. {
-        if x < WIDTH/3. {
-            3
-        } else if x < 2.*WIDTH/3. {
-            4
-        } else {
-            5
-        }
-    } else {
-        if x < WIDTH/3. {
-            6
-        } else if x < 2.*WIDTH/3. {
-            7
-        } else {
-            8
-        }
-    }
-}

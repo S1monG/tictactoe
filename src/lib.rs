@@ -10,6 +10,7 @@ const WINNING_LINES: [[usize; 3]; 8] = [
 ];
 
 pub mod computer;
+pub mod functions;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Board {
